@@ -1,0 +1,63 @@
+{
+  "name": "graphql-workspace-authorizer-transformer-v2",
+  "version": "0.9.5-alpha",
+  "description": "Add a custom authorization flow to all of your Amplify API mutations and queries!",
+  "author": "Alexis Gomez <alexisg.0207@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build",
+    "preversion": "npm run test",
+    "version": "auto-changelog --breaking-pattern \"BREAKING CHANGE:\" -p && git add CHANGELOG.md",
+    "postversion": "git push origin master --tags && npm publish",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/portermetrics/graphql_workspace_authorizer_transformer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/portermetrics/graphql_workspace_authorizer_transformer/issues"
+  },
+  "homepage": "https://github.com/portermetrics/graphql_workspace_authorizer_transformer#readme",
+  "keywords": [
+    "aws",
+    "amplify",
+    "graphql",
+    "transformer",
+    "custom",
+    "authorization",
+    "flow",
+    "appsync",
+    "porter",
+    "audit",
+    "authorize",
+    "auth",
+    "directive"
+  ],
+  "dependencies": {
+    "@aws-amplify/graphql-model-transformer": "^0.13.0",
+    "@aws-amplify/graphql-transformer-core": "^0.16.0",
+    "@aws-amplify/graphql-transformer-interfaces": "^1.13.0",
+    "aws-amplify": "^4.3.13",
+    "graphql": "^14.5.8",
+    "graphql-transformer-common": "^4.19.9",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/deep-diff": "^1.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/md5": "^2.3.1",
+    "auto-changelog": "^2.2.1",
+    "graphql-appsync-transformer": "^1.0.35",
+    "jest": "^26.6.3",
+    "prettier": "^2.3.0",
+    "ts-jest": "^26.5.6",
+    "typescript": "^4.2.4"
+  }
+}
