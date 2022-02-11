@@ -64,7 +64,6 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   generateResolvers = (context: TransformerContextProvider): void => {
 
     for (const modelName of this.directiveMap.keys()) {
-      console.log(modelName)
       const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
       if (!context.api.host.hasDataSource(`${config.ownershipModel.modelName}Table`)) {
         throw new Error(`Ownership model datasource ${config.ownershipModel.modelName}Table doesn't exist`);
