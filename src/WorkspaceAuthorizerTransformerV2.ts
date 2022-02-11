@@ -46,10 +46,10 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
       object: definition, 
       directive: directive, 
       ownershipModel: {
-        modelName: "Company",
+        modelName: "Ownership",
         userIdFieldName: "userID",
         workspaceIdFieldName: "companyID",
-        indexName: "byUser",
+        indexName: "byUserId",
         roleFieldName: "role"
       },
       rules: [{
