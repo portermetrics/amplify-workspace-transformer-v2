@@ -18,7 +18,7 @@ import { OwnershipModel, WorkspaceRule, worspaceDirectiveDefinition, DefaultValu
 import { getModelConfig, getMutationFieldNames, getQueryFieldNames } from './utils/schema';
 import { ModelDirectiveConfiguration } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-model-transformer';
 import { generateGetRequestTemplateSnippets, generateOwnershipMutationValidatorSnippets, generateSetWorkspaceToStashOnInitSnippets } from './resolvers/mutation';
-import { generateSetWorkspaceToStashPostDataLoadSnippets, generateOwnershipGetValidatorFilterSnippets, generateOwnershipGetValidatorFilterSnippets } from './resolvers/query';
+import { generateSetWorkspaceToStashPostDataLoadSnippets, generateOwnershipGetValidatorFilterSnippets} from './resolvers/query';
 
 
 
