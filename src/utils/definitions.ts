@@ -7,6 +7,7 @@ export type DefaultValueDirectiveConfiguration = {
   directive: DirectiveNode;
   ownershipModel: OwnershipModel,
   rules: Array<WorkspaceRule>
+  cognitoGroupExceptions: Array<String>,
 };
 
 
@@ -24,7 +25,7 @@ export interface WorkspaceRule {
   }
 
 export const worspaceDirectiveDefinition = `
-  directive @workspaceAuthV2(ownershipModel: OwnershipModel, rules: [WorkspaceRule!]) on OBJECT | FIELD_DEFINITION
+  directive @workspaceAuthV2(ownershipModel: OwnershipModel, rules: [WorkspaceRule!], cognitoGroupExceptions: [String]) on OBJECT | FIELD_DEFINITION
   input OwnershipModel {
     modelName: String!
     userIdFieldName: String!

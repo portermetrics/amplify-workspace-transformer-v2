@@ -17,9 +17,8 @@ import { DirectiveNode, ObjectTypeDefinitionNode, Kind, NameNode, InterfaceTypeD
 import { OwnershipModel, WorkspaceRule, worspaceDirectiveDefinition, DefaultValueDirectiveConfiguration } from './utils/definitions';
 import { getModelConfig, getMutationFieldNames, getQueryFieldNames } from './utils/schema';
 import { ModelDirectiveConfiguration } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-model-transformer';
-import { generateOwnershipValidatorSnippets } from './resolvers/common';
-import { generateGetRequestTemplateSnippets, generateSetWorkspaceToStashOnInitSnippets } from './resolvers/mutation';
-import { generateSetWorkspaceToStashPostDataLoadSnippets } from './resolvers/query';
+import { generateGetRequestTemplateSnippets, generateOwnershipMutationValidatorSnippets, generateSetWorkspaceToStashOnInitSnippets } from './resolvers/mutation';
+import { generateSetWorkspaceToStashPostDataLoadSnippets, generateOwnershipGetValidatorFilterSnippets, generateOwnershipGetValidatorFilterSnippets } from './resolvers/query';
 
 
 
@@ -49,13 +48,14 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
         modelName: "Ownership",
         userIdFieldName: "userID",
         workspaceIdFieldName: "companyID",
-        indexName: "byUserId",
+        indexName: "byUserIdAndCompanyId",
         roleFieldName: "role"
       },
       rules: [{
         groups: ["owner", "admin", "editor"],
         operations: ["create", "update", "delete", "read"]
-      }] 
+      }] ,
+      cognitoGroupExceptions: []
     });
     this.directiveMap.set(definition.name.value, config);
     this.modelDirectiveConfig.set(definition.name.value, getModelConfig(modelDirective, definition.name.value, ctx.isProjectUsingDataStore()));
@@ -117,31 +117,18 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   ): void => {
     const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
     const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-    const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "read")
-    const setWorkspaceToStashInitSnippet: any = generateSetWorkspaceToStashOnInitSnippets(config.ownershipModel)
-    const setWorkspaceToStashPostDataLoadSnippet: any = generateSetWorkspaceToStashPostDataLoadSnippets(config.ownershipModel)
+    const workspaceAuthFilterSnippets: any = generateOwnershipGetValidatorFilterSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "read")
 
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
     
     resolver.addToSlot(
-      'postDataLoad',
+      'postAuth',
       MappingTemplate.s3MappingTemplateFromString(
-        setWorkspaceToStashPostDataLoadSnippet["req"],
+        workspaceAuthFilterSnippets["req"],
         `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
       ),
       MappingTemplate.s3MappingTemplateFromString(
-        setWorkspaceToStashPostDataLoadSnippet["res"],
-        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-      )
-    );
-    resolver.addToSlot(
-      'postDataLoad',
-      MappingTemplate.s3MappingTemplateFromString(
-        ownershipSnippets["req"],
-        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-      ),
-      MappingTemplate.s3MappingTemplateFromString(
-        ownershipSnippets["res"],
+        workspaceAuthFilterSnippets["res"],
         `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
       ),
       datasource
@@ -157,30 +144,18 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   ): void => {
     const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
     const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-    const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "read")
-    const setWorkspaceToStashInitSnippet: any = generateSetWorkspaceToStashOnInitSnippets(config.ownershipModel)
-    const setWorkspaceToStashPostDataLoadSnippet: any = generateSetWorkspaceToStashPostDataLoadSnippets(config.ownershipModel)
-    
+    const workspaceAuthFilterSnippets: any = generateOwnershipGetValidatorFilterSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "read")
+
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
+    
     resolver.addToSlot(
-      'postDataLoad',
+      'postAuth',
       MappingTemplate.s3MappingTemplateFromString(
-        setWorkspaceToStashPostDataLoadSnippet["req"],
+        workspaceAuthFilterSnippets["req"],
         `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
       ),
       MappingTemplate.s3MappingTemplateFromString(
-        setWorkspaceToStashPostDataLoadSnippet["res"],
-        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-      )
-    );
-    resolver.addToSlot(
-      'postDataLoad',
-      MappingTemplate.s3MappingTemplateFromString(
-        ownershipSnippets["req"],
-        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-      ),
-      MappingTemplate.s3MappingTemplateFromString(
-        ownershipSnippets["res"],
+        workspaceAuthFilterSnippets["res"],
         `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
       ),
       datasource
@@ -197,30 +172,18 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
     if (ctx.isProjectUsingDataStore()) {
       const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
       const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-      const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "read")
-      const setWorkspaceToStashInitSnippet: any = generateSetWorkspaceToStashOnInitSnippets(config.ownershipModel)
-      const setWorkspaceToStashPostDataLoadSnippet: any = generateSetWorkspaceToStashPostDataLoadSnippets(config.ownershipModel)
-      
+      const workspaceAuthFilterSnippets: any = generateOwnershipGetValidatorFilterSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "read")
+
       const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
+      
       resolver.addToSlot(
-        'postDataLoad',
+        'postAuth',
         MappingTemplate.s3MappingTemplateFromString(
-          setWorkspaceToStashPostDataLoadSnippet["req"],
+          workspaceAuthFilterSnippets["req"],
           `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
         ),
         MappingTemplate.s3MappingTemplateFromString(
-          setWorkspaceToStashPostDataLoadSnippet["res"],
-          `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-        )
-      );
-      resolver.addToSlot(
-        'postDataLoad',
-        MappingTemplate.s3MappingTemplateFromString(
-          ownershipSnippets["req"],
-          `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-        ),
-        MappingTemplate.s3MappingTemplateFromString(
-          ownershipSnippets["res"],
+          workspaceAuthFilterSnippets["res"],
           `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
         ),
         datasource
@@ -242,30 +205,18 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   ): void => {
     const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
     const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-    const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "read")
-    const setWorkspaceToStashInitSnippet: any = generateSetWorkspaceToStashOnInitSnippets(config.ownershipModel)
-    const setWorkspaceToStashPostDataLoadSnippet: any = generateSetWorkspaceToStashPostDataLoadSnippets(config.ownershipModel)
-    
+    const workspaceAuthFilterSnippets: any = generateOwnershipGetValidatorFilterSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "read")
+
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
+    
     resolver.addToSlot(
-      'postDataLoad',
+      'postAuth',
       MappingTemplate.s3MappingTemplateFromString(
-        setWorkspaceToStashPostDataLoadSnippet["req"],
+        workspaceAuthFilterSnippets["req"],
         `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
       ),
       MappingTemplate.s3MappingTemplateFromString(
-        setWorkspaceToStashPostDataLoadSnippet["res"],
-        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-      )
-    );
-    resolver.addToSlot(
-      'postDataLoad',
-      MappingTemplate.s3MappingTemplateFromString(
-        ownershipSnippets["req"],
-        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-      ),
-      MappingTemplate.s3MappingTemplateFromString(
-        ownershipSnippets["res"],
+        workspaceAuthFilterSnippets["res"],
         `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
       ),
       datasource
@@ -281,7 +232,7 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   ): void => {
     const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
     const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-    const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "create")
+    const ownershipSnippets: any = generateOwnershipMutationValidatorSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "create")
     const setWorkspaceToStashInitSnippet: any = generateSetWorkspaceToStashOnInitSnippets(config.ownershipModel)
     
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
@@ -314,7 +265,7 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   ): void => {
     const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
     const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-    const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "update")
+    const ownershipSnippets: any = generateOwnershipMutationValidatorSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "update")
     const getRequestTemplateSnippets:any = generateGetRequestTemplateSnippets(config.ownershipModel)
     
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
@@ -349,7 +300,7 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
   ): void => {
     const resolver = ctx.resolvers.getResolver(typeName, fieldName) as TransformerResolverProvider;
     const config = this.directiveMap.get(modelName) as DefaultValueDirectiveConfiguration
-    const ownershipSnippets: any = generateOwnershipValidatorSnippets(config.ownershipModel, config.rules, "delete")
+    const ownershipSnippets: any = generateOwnershipMutationValidatorSnippets(config.ownershipModel, config.rules, config.cognitoGroupExceptions, "delete")
     const getRequestTemplateSnippets:any = generateGetRequestTemplateSnippets(config.ownershipModel)
     
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
