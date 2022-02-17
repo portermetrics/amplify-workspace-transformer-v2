@@ -2,7 +2,6 @@ import { COGNITO_AUTH_TYPE, IS_AUTHORIZED_FLAG } from '../utils/constants';
 import { OwnershipModel, WorkspaceRule } from '../utils/definitions';
 import { getIdentityClaimExp } from './helpers'
 import {
-    Expression,
     compoundExpression,
     set,
     obj,
@@ -22,11 +21,10 @@ import {
     and,
     forEach,
     not,
-    or,
     toJson,
     isNullOrEmpty,
     DynamoDBMappingTemplate,
-  } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql-mapping-template';
+  } from 'graphql-mapping-template';
 
 export const generateSetWorkspaceToStashOnInitSnippets = (ownershipModel: OwnershipModel): {} => {
     return { 
@@ -74,33 +72,29 @@ export const generateGetRequestTemplateSnippets = (ownershipModel: OwnershipMode
 export const generateOwnershipMutationValidatorSnippets = (ownershipModel:OwnershipModel, rules: WorkspaceRule[], cognitoGroupExceptions: Array<String>, operationType:string): {} => {
     return { 
       "req": printBlock(`Get the ownership from dynamodb`)(
-        ifElse(
-          equals(ref('util.authType()'), str(COGNITO_AUTH_TYPE)),
-          compoundExpression([
-            DynamoDBMappingTemplate.query({
-              query: obj({
-                expression: str('#userID = :userID and #workspaceID = :workspaceID'),
-                expressionNames: obj({
-                  '#userID': str(ownershipModel.userIdFieldName),
-                  '#workspaceID': str(ownershipModel.workspaceIdFieldName),
-                }),
-                expressionValues: obj({
-                  ':userID': obj({
-                    S: str("${context.identity.username}"),
+            compoundExpression([
+              DynamoDBMappingTemplate.query({
+                query: obj({
+                  expression: str('#userID = :userID and #workspaceID = :workspaceID'),
+                  expressionNames: obj({
+                    '#userID': str(ownershipModel.userIdFieldName),
+                    '#workspaceID': str(ownershipModel.workspaceIdFieldName),
                   }),
-                  ":workspaceID" : obj({
-                    S: str("${context.stash.workspaceID}"),
-                  })
+                  expressionValues: obj({
+                    ':userID': obj({
+                      S: str("${context.identity.username}"),
+                    }),
+                    ":workspaceID" : obj({
+                      S: str("${context.stash.workspaceID}"),
+                    })
+                  }),
                 }),
-              }),
-              scanIndexForward: bool(true),
-              filter: nul(),
-              limit: int(1),
-              index: str(ownershipModel.indexName)
-            })
-          ]),
-          ref("util.toJson({\"version\":\"2018-05-29\",\"payload\":{}})")
-        )
+                scanIndexForward: bool(true),
+                filter: nul(),
+                limit: int(1),
+                index: str(ownershipModel.indexName)
+              })
+            ])
       ),
       "res":printBlock('Setting ${fieldName} to be the default owner')(
         compoundExpression([

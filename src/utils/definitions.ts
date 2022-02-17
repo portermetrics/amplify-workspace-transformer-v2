@@ -1,4 +1,4 @@
-import { DirectiveNode, ObjectTypeDefinitionNode } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql';
+import { DirectiveNode, ObjectTypeDefinitionNode } from 'graphql';
 
 export type WorkspaceModelOperation = 'create' | 'update' | 'delete' | 'read';
 
