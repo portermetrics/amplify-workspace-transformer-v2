@@ -64,7 +64,7 @@ export const generateGetRequestTemplateSnippets = (ownershipModel: OwnershipMode
             ref("util.toJson($ctx.prev.result)")
         ]
       return {
-        "req": printBlock('Get Request template')(ifElse(equals(ref('util.authType()'), str(COGNITO_AUTH_TYPE)),compoundExpression(statements), obj({}))),
+        "req": printBlock('Get Request template')(compoundExpression(statements)),
         "res": printBlock('Add workspace to stash and return prev result')(compoundExpression(workspaceToStash))
     };
 };
