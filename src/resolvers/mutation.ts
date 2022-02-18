@@ -26,7 +26,7 @@ import {
     toJson,
     isNullOrEmpty,
     DynamoDBMappingTemplate,
-  } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql-mapping-template';
+  } from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql-mapping-template';
 
 export const generateSetWorkspaceToStashOnInitSnippets = (ownershipModel: OwnershipModel): {} => {
     return { 

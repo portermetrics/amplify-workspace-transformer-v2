@@ -4,7 +4,7 @@ import {
   TransformerPluginBase,
   InvalidDirectiveError,
   TransformerContractError,
-} from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-transformer-core';
+} from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-transformer-core';
 import {
   TransformerContextProvider,
   TransformerResolverProvider,
@@ -12,11 +12,11 @@ import {
   DataSourceProvider,
   QueryFieldType,
   MutationFieldType,
-} from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-transformer-interfaces';
-import { DirectiveNode, ObjectTypeDefinitionNode, Kind, NameNode, InterfaceTypeDefinitionNode, FieldDefinitionNode } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql';
+} from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-transformer-interfaces';
+import { DirectiveNode, ObjectTypeDefinitionNode, Kind, NameNode, InterfaceTypeDefinitionNode, FieldDefinitionNode } from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql';
 import { OwnershipModel, WorkspaceRule, worspaceDirectiveDefinition, DefaultValueDirectiveConfiguration } from './utils/definitions';
 import { getModelConfig, getMutationFieldNames, getQueryFieldNames } from './utils/schema';
-import { ModelDirectiveConfiguration } from 'C:\\Users\\alexi\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-model-transformer';
+import { ModelDirectiveConfiguration } from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-model-transformer';
 import { generateGetRequestTemplateSnippets, generateOwnershipMutationValidatorSnippets, generateSetWorkspaceToStashOnInitSnippets } from './resolvers/mutation';
 import { generateSetWorkspaceToStashPostDataLoadSnippets, generateOwnershipGetValidatorFilterSnippets} from './resolvers/query';
 
@@ -36,7 +36,7 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
     directive: DirectiveNode,
     ctx: TransformerSchemaVisitStepContextProvider,
   ): void => {
-    const modelDirective = definition.directives?.find(dir => dir.name.value === 'model');
+    const modelDirective = definition.directives?.find((dir: { name: { value: string; }; }) => dir.name.value === 'model');
     if (!modelDirective) {
       throw new TransformerContractError('Types annotated with @workspaceAuthV2 must also be annotated with @model.');
     }
