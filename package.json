@@ -1,6 +1,6 @@
 {
-  "name": "@porter/graphql-workspace-authorizer-transformer-v2",
-  "version": "0.9.5-alpha",
+  "name": "@porterm/graphql-workspace-authorizer-transformer-v2",
+  "version": "0.9.6-alpha",
   "description": "Add a custom authorization flow to all of your Amplify API mutations and queries!",
   "author": "Alexis Gomez <alexisg.0207@gmail.com>",
   "license": "MIT",
@@ -19,12 +19,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/portermetrics/graphql_workspace_authorizer_transformer.git"
+    "url": "git+https://github.com/portermetrics/amplify-workspace-transformer-v2.git"
   },
   "bugs": {
-    "url": "https://github.com/portermetrics/graphql_workspace_authorizer_transformer/issues"
+    "url": "https://github.com/portermetrics/amplify-workspace-transformer-v2/issues"
   },
-  "homepage": "https://github.com/portermetrics/graphql_workspace_authorizer_transformer#readme",
+  "homepage": "https://github.com/portermetrics/amplify-workspace-transformer-v2.git#readme",
   "keywords": [
     "aws",
     "amplify",

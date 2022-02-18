@@ -3,7 +3,7 @@
 # graphql-workspace-authorizer-transformer-v2
 
 This transformer is intended to be used with @model and @auth directives.
-if you don't implement @auth directive, you may have vulnerabilities like Sandbox bypass.
+If you don't implement @auth directive, you may have vulnerabilities like Sandbox bypass.
 
 ##Local instalation, run this command located in the project where you want to install this module
 
@@ -16,17 +16,17 @@ if you don't implement @auth directive, you may have vulnerabilities like Sandbo
 
 ## Installation
 
-`npm install --save graphql-workspace-authorizer-transformer-v2`
+`npm install --save @porterm/graphql-workspace-authorizer-transformer-v2`
 
 ## How to use
 
 ### Setup custom transformer
 
-Edit `amplify/backend/api/<YOUR_API>/transform.conf.json` and append `"graphql-workspace-authorizer-transformer-v2"` to the `transformers` field.
+Edit `amplify/backend/api/<YOUR_API>/transform.conf.json` and append `"@porterm/graphql-workspace-authorizer-transformer-v2"` to the `transformers` field.
 
 ```json
 "transformers": [
-    "graphql-workspace-authorizer-transformer-v2"
+    "@porterm/graphql-workspace-authorizer-transformer-v2"
 ]
 ```
 
@@ -69,4 +69,4 @@ The [MIT License](LICENSE)
 
 ## Credits
 
-The _graphql-workspace-authorizer-transformer-v2_ library is maintained by Porter Metrics
+The _graphql-workspace-authorizer-transformer-v2_ project is maintained by Porter Metrics
