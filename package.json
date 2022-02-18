@@ -1,5 +1,5 @@
 {
-  "name": "graphql-workspace-authorizer-transformer-v2",
+  "name": "@porter/graphql-workspace-authorizer-transformer-v2",
   "version": "0.9.5-alpha",
   "description": "Add a custom authorization flow to all of your Amplify API mutations and queries!",
   "author": "Alexis Gomez <alexisg.0207@gmail.com>",
