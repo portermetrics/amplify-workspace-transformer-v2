@@ -41,10 +41,13 @@
     "directive"
   ],
   "dependencies": {
+    "@aws-amplify/graphql-auth-transformer": "^0.7.6",
     "@aws-amplify/graphql-model-transformer": "^0.13.0",
     "@aws-amplify/graphql-transformer-core": "^0.16.0",
     "@aws-amplify/graphql-transformer-interfaces": "^1.13.0",
     "aws-cdk-lib": "^2.12.0",
+    "graphql-appsync-transformer": "^1.0.35",
+    "graphql-dynamodb-transformer": "^7.2.23",
     "graphql-mapping-template": "^4.20.3"
   },
   "devDependencies": {

@@ -1,107 +1,71 @@
-import { GraphQLTransform } from "graphql-transformer-core";
-import { DynamoDBModelTransformer } from "graphql-dynamodb-transformer";
+import { ModelTransformer } from '@aws-amplify/graphql-model-transformer';
+import { GraphQLTransform } from '@aws-amplify/graphql-transformer-core';
+import { AppSyncAuthConfiguration } from '@aws-amplify/graphql-transformer-interfaces';
 import WorkspaceAuthorizerTransformerV2 from "../index";
 
-import {
-  obj,
-  str,
-  ref,
-  printBlock,
-  print,
-  compoundExpression,
-  qref,
-  raw,
-  and,
-  iff,
-  int,
-  not,
-  or,
-  forEach,
-  bool,
-  ifElse,
-  nul,
-  DynamoDBMappingTemplate,
-} from "graphql-mapping-template";
-
-// @ts-ignore
-import { AppSyncTransformer } from "graphql-appsync-transformer";
-
-import {
-  plurality,
-} from "graphql-transformer-common";
-
-const transformer = new GraphQLTransform({
-  transformers: [
-    new AppSyncTransformer(),
-    new DynamoDBModelTransformer(),
-    new WorkspaceAuthorizerTransformerV2(),
-  ],
-});
-
-// test("@workspaceAuth directive can not be used on fields", () => {
-//   const schema = `
-//     type ExpiringChatMessage @model {
-//       id: ID!
-//       title: String!
-//       description: String @workspaceAuth
-//     }
-//   `;
-//   expect(() => transformer.transform(schema)).toThrowError(
-//     'Directive "workspaceAuth" may not be used on FIELD_DEFINITION.'
-//   );
-// });
-
-// test("@workspaceAuth directive must be used together with @model directive", () => {
-//   const schema = `
-//       type Todo @workspaceAuth {
-//         id: ID!
-//         title: String!
-//         description: String
-//       }
-//     `;
-//   expect(() => transformer.transform(schema)).toThrowError(
-//     "Types annotated with @workspaceAuth must also be annotated with @model."
-//   );
-// });
 
 test("Transformer can be executed without errors", () => {
-  const schema = `
-    type Todo @model @workspaceAuth {
-        id: ID!
-        title: String!
-        description: String
-    }
-  `;
-  console.log(transformer.transform(schema))
-  // expect(() => transformer.transform(schema)).not.toThrow();
+  const authConfig: AppSyncAuthConfiguration = {
+    defaultAuthentication: {
+      authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    },
+    additionalAuthenticationProviders: [],
+  };
+  const validSchema = `
+  type Ownership {
+    id: ID!
+    UserId: ID!
+    title: String!
+    companyID: ID!
+    createdAt: String
+    updatedAt: String
+  }  
+  
+  type Post @model @workspaceAuthV2 {
+      id: ID!
+      title: String!
+      companyID: ID!
+      createdAt: String
+      updatedAt: String
+    }`;
+  const transformer = new GraphQLTransform({
+    authConfig,
+    transformers: [new ModelTransformer(), new WorkspaceAuthorizerTransformerV2()],
+  });
+  expect(() => transformer.transform(validSchema)).toThrowError(
+    "Ownership model datasource OwnershipTable doesn't exist"
+  );
 });
 
-// test("Transformer can be executed without errors", () => {
-//   let result = print(
-//     compoundExpression([
-//       iff(
-//         and([not(ref(`util.isNull($ctx.result)`)), not(ref(`util.isNull($ctx.result.asdf)`))]),
-//         qref(`$ctx.stash.put("workspaceID", $ctx.result.asdf)`)
-//       ),
-//       iff(
-//         and([not(ref(`util.isNull($ctx.result)`)), not(ref(`util.isNullOrEmpty($ctx.result.items)`)), not(ref(`util.isNull($ctx.result.items[0].asdf)`))]),
-//         compoundExpression([
-//           qref(`$ctx.stash.put("workspaceID", $ctx.result.items[0].asdfas)`),
-//           forEach(
-//             ref('item'), 
-//             ref('context.result.items'), 
-//             [
-//               iff(
-//                 ref(`ctx.stash.workspaceID != $item.asdfs`),
-//                 ref('util.unauthorized()')
-//               )
-//             ]
-//           ),
-//         ])
-//       ),
-//       obj({prueba:str("sdfsdf")}),
-//     ])
-//   )
-
-//   console.log(result)
-// });
+test("@workspaceAuthV2 directive must be used together with @model directive", () => {
+  const authConfig: AppSyncAuthConfiguration = {
+    defaultAuthentication: {
+      authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    },
+    additionalAuthenticationProviders: [],
+  };
+  const invalidSchema = `
+  type Ownership {
+    id: ID!
+    UserId: ID!
+    title: String!
+    companyID: ID!
+    createdAt: String
+    updatedAt: String
+  }  
+  
+  type Post @workspaceAuthV2 {
+      id: ID!
+      title: String!
+      companyID: ID!
+      createdAt: String
+      updatedAt: String
+    }`;
+  const transformer = new GraphQLTransform({
+    authConfig,
+    transformers: [new ModelTransformer(), new WorkspaceAuthorizerTransformerV2()],
+  });
+  expect(() => transformer.transform(invalidSchema)).toThrowError(
+    "Types annotated with @workspaceAuthV2 must also be annotated with @model."
+  );
+});
