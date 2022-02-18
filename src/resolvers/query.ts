@@ -117,9 +117,10 @@ export const generateOwnershipGetValidatorFilterSnippets = (ownershipModel:Owner
                                 ]),
                             ]),
                         ),
+                        iff(not(ref(IS_AUTHORIZED_FLAG)), ref('util.unauthorized()')),
                     ]),
                 ),
-                iff(not(ref(IS_AUTHORIZED_FLAG)), ref('util.unauthorized()')),
+                
                 ref("util.toJson($ctx.prev.result)")
             ]),
         ),
