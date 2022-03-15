@@ -24,7 +24,7 @@ import {
     list,
     isNullOrEmpty,
     DynamoDBMappingTemplate,
-  } from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql-mapping-template';  
+  } from 'graphql-mapping-template';  
   
 export const generateSetWorkspaceToStashPostDataLoadSnippets = (ownershipModel: OwnershipModel): {} => {
     return { 
