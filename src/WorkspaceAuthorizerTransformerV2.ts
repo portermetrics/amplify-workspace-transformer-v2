@@ -3,7 +3,7 @@ import {
   MappingTemplate,
   TransformerPluginBase,
   TransformerContractError,
-} from '@aws-amplify/graphql-transformer-core';
+} from '/opt/amazon/lib/node_modules/@aws-amplify/cli/node_modules/@aws-amplify/graphql-transformer-core';
 import {
   TransformerContextProvider,
   TransformerResolverProvider,
@@ -11,11 +11,11 @@ import {
   DataSourceProvider,
   QueryFieldType,
   MutationFieldType,
-} from '@aws-amplify/graphql-transformer-interfaces';
-import { DirectiveNode, ObjectTypeDefinitionNode } from 'graphql';
+} from '/opt/amazon/lib/node_modules/@aws-amplify/cli/node_modules/@aws-amplify/graphql-transformer-interfaces';
+import { DirectiveNode, ObjectTypeDefinitionNode } from '/opt/amazon/lib/node_modules/@aws-amplify/cli/node_modules/graphql';
 import { worspaceDirectiveDefinition, DefaultValueDirectiveConfiguration } from './utils/definitions';
 import { getModelConfig, getMutationFieldNames, getQueryFieldNames } from './utils/schema';
-import { ModelDirectiveConfiguration } from '@aws-amplify/graphql-model-transformer';
+import { ModelDirectiveConfiguration } from '/opt/amazon/lib/node_modules/@aws-amplify/cli/node_modules/@aws-amplify/graphql-model-transformer';
 import { generateGetRequestTemplateSnippets, generateOwnershipMutationValidatorSnippets, generateSetWorkspaceToStashOnInitSnippets } from './resolvers/mutation';
 import { generateSetWorkspaceToStashPostDataLoadSnippets, generateOwnershipGetValidatorFilterSnippets} from './resolvers/query';
 import { generateOwnershipSyncValidatorFilterSnippets } from './resolvers/sync';

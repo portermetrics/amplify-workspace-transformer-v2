@@ -24,7 +24,7 @@ import {
     toJson,
     isNullOrEmpty,
     DynamoDBMappingTemplate,
-  } from 'graphql-mapping-template';
+  } from '/opt/amazon/lib/node_modules/@aws-amplify/cli/node_modules/graphql-mapping-template';
 
 export const generateSetWorkspaceToStashOnInitSnippets = (ownershipModel: OwnershipModel): {} => {
     return { 

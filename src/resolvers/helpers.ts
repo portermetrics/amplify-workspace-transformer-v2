@@ -2,7 +2,7 @@ import {
     Expression,
     methodCall,
     ref,
-  } from 'graphql-mapping-template';  
+  } from '/opt/amazon/lib/node_modules/@aws-amplify/cli/node_modules/graphql-mapping-template';  
   
 
 export const getIdentityClaimExp = (value: Expression, defaultValueExp: Expression): Expression => {
