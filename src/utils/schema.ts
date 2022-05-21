@@ -1,9 +1,9 @@
-import { QueryFieldType, MutationFieldType } from "C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-transformer-interfaces";
-import { ModelDirectiveConfiguration, SubscriptionLevel } from 'C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-model-transformer';
+import { QueryFieldType, MutationFieldType } from "@aws-amplify/graphql-transformer-interfaces";
+import { ModelDirectiveConfiguration, SubscriptionLevel } from '@aws-amplify/graphql-model-transformer';
 import { DefaultValueDirectiveConfiguration } from "./definitions";
-import { DirectiveNode } from "C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql";
-import { DirectiveWrapper } from "C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify/graphql-transformer-core";
-import { toCamelCase, plurality } from "C:\\Users\\sebas\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\graphql-transformer-common";
+import { DirectiveNode } from "graphql";
+import { DirectiveWrapper } from "@aws-amplify/graphql-transformer-core";
+import { toCamelCase, plurality } from "graphql-transformer-common";
 import md5 from 'md5';
 
 export const getModelConfig = (directive: DirectiveNode, typeName: string, isDataStoreEnabled = false): ModelDirectiveConfiguration => {

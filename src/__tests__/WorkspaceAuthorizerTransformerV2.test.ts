@@ -32,6 +32,7 @@ test("Transformer can be executed without errors", () => {
     authConfig,
     transformers: [new ModelTransformer(), new WorkspaceAuthorizerTransformerV2()],
   });
+  
   expect(() => transformer.transform(validSchema)).toThrowError(
     "Ownership model datasource OwnershipTable doesn't exist"
   );
