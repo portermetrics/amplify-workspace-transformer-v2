@@ -11,7 +11,6 @@ import {
   DataSourceProvider,
   QueryFieldType,
   MutationFieldType,
-  MappingTemplateProvider
 } from '@aws-amplify/graphql-transformer-interfaces';
 import { DirectiveNode, ObjectTypeDefinitionNode } from 'graphql';
 import { worspaceDirectiveDefinition, DefaultValueDirectiveConfiguration } from './utils/definitions';
@@ -78,31 +77,31 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
           case QueryFieldType.GET:
             this.protectQueryResolver(context, def, query.typeName, query.fieldName, modelName);
             break;
-          // case QueryFieldType.LIST:
-          //   this.protectQueryResolver(context, def, query.typeName, query.fieldName, modelName);
-          //   break;
-          // case QueryFieldType.SYNC:
-          //   this.protectSyncResolver(context, def, query.typeName, query.fieldName, modelName);
-          //   break;
-          // default:
-          //   throw new TransformerContractError('Unkown query field type');
+          case QueryFieldType.LIST:
+            this.protectQueryResolver(context, def, query.typeName, query.fieldName, modelName);
+            break;
+          case QueryFieldType.SYNC:
+            this.protectSyncResolver(context, def, query.typeName, query.fieldName, modelName);
+            break;
+          default:
+            throw new TransformerContractError('Unkown query field type');
         }
       }
 
       const mutationFields = getMutationFieldNames(modelConfig!);
       for (let mutation of mutationFields.values()) {
         switch (mutation.type) {
-          // case MutationFieldType.CREATE:
-          //   this.protectCreateResolver(context, def, mutation.typeName, mutation.fieldName, modelName);
-          //   break;
-          // case MutationFieldType.UPDATE:
-          //   this.protectUpdateResolver(context, def, mutation.typeName, mutation.fieldName, modelName);
-          //   break;
-          // case MutationFieldType.DELETE:
-          //   this.protectDeleteResolver(context, def, mutation.typeName, mutation.fieldName, modelName);
-          //   break;
-          // default:
-            // throw new TransformerContractError('Unknown Mutation field type');
+          case MutationFieldType.CREATE:
+            this.protectCreateResolver(context, def, mutation.typeName, mutation.fieldName, modelName);
+            break;
+          case MutationFieldType.UPDATE:
+            this.protectUpdateResolver(context, def, mutation.typeName, mutation.fieldName, modelName);
+            break;
+          case MutationFieldType.DELETE:
+            this.protectDeleteResolver(context, def, mutation.typeName, mutation.fieldName, modelName);
+            break;
+          default:
+            throw new TransformerContractError('Unknown Mutation field type');
         }
       }
     } 
@@ -131,18 +130,18 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
       )
     );
 
-    // resolver.addToSlot(
-    //   'postAuth',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     workspaceAuthFilterSnippets["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   ),
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     workspaceAuthFilterSnippets["res"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-    //   ),
-    //   datasource
-    // );
+    resolver.addToSlot(
+      'postAuth',
+      MappingTemplate.s3MappingTemplateFromString(
+        workspaceAuthFilterSnippets["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      ),
+      MappingTemplate.s3MappingTemplateFromString(
+        workspaceAuthFilterSnippets["res"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+      ),
+      datasource
+    );
   };
 
   protectSyncResolver = (
@@ -159,18 +158,18 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
 
       const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
 
-      // resolver.addToSlot(
-      //   'postAuth',
-      //   MappingTemplate.s3MappingTemplateFromString(
-      //     workspaceAuthFilterSnippets["req"],
-      //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-      //   ),
-      //   MappingTemplate.s3MappingTemplateFromString(
-      //     workspaceAuthFilterSnippets["res"],
-      //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-      //   ),
-      //   datasource
-      // );
+      resolver.addToSlot(
+        'postAuth',
+        MappingTemplate.s3MappingTemplateFromString(
+          workspaceAuthFilterSnippets["req"],
+          `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+        ),
+        MappingTemplate.s3MappingTemplateFromString(
+          workspaceAuthFilterSnippets["res"],
+          `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+        ),
+        datasource
+      );
     }
   };
   /*
@@ -193,30 +192,30 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
 
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
     
-    // resolver.addToSlot(
-    //   'init',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     workspaceIdInitSnippets["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   ),
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     workspaceIdInitSnippets["res"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-    //   )
-    // );
+    resolver.addToSlot(
+      'init',
+      MappingTemplate.s3MappingTemplateFromString(
+        workspaceIdInitSnippets["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      ),
+      MappingTemplate.s3MappingTemplateFromString(
+        workspaceIdInitSnippets["res"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+      )
+    );
 
-    // resolver.addToSlot(
-    //   'postAuth',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     workspaceAuthFilterSnippets["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   ),
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     workspaceAuthFilterSnippets["res"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-    //   ),
-    //   datasource
-    // );
+    resolver.addToSlot(
+      'postAuth',
+      MappingTemplate.s3MappingTemplateFromString(
+        workspaceAuthFilterSnippets["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      ),
+      MappingTemplate.s3MappingTemplateFromString(
+        workspaceAuthFilterSnippets["res"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+      ),
+      datasource
+    );
   };
  
   protectCreateResolver = (
@@ -232,25 +231,25 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
     const setWorkspaceToStashInitSnippet: any = generateSetWorkspaceToStashOnInitSnippets(config.ownershipModel)
     
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
-    // resolver.addToSlot(
-    //   'init',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     setWorkspaceToStashInitSnippet["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   )
-    // );
-    // resolver.addToSlot(
-    //   'auth',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     ownershipSnippets["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   ),
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     ownershipSnippets["res"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-    //   ),
-    //   datasource
-    // );
+    resolver.addToSlot(
+      'init',
+      MappingTemplate.s3MappingTemplateFromString(
+        setWorkspaceToStashInitSnippet["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      )
+    );
+    resolver.addToSlot(
+      'auth',
+      MappingTemplate.s3MappingTemplateFromString(
+        ownershipSnippets["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      ),
+      MappingTemplate.s3MappingTemplateFromString(
+        ownershipSnippets["res"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+      ),
+      datasource
+    );
   };
   protectUpdateResolver = (
     ctx: TransformerContextProvider,
@@ -267,24 +266,24 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
 
     const currentModelDatasource = ctx.api.host.getDataSource(`${def.name.value}Table`) as DataSourceProvider;
-    // resolver.addToSlot(
-    //   'auth',
-    //   MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["req"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`),
-    //   MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["res"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`),
-    //   currentModelDatasource,
-    // );
-    // resolver.addToSlot(
-    //   'auth',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     ownershipSnippets["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   ),
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     ownershipSnippets["res"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-    //   ),
-    //   datasource
-    // );
+    resolver.addToSlot(
+      'auth',
+      MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["req"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`),
+      MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["res"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`),
+      currentModelDatasource,
+    );
+    resolver.addToSlot(
+      'auth',
+      MappingTemplate.s3MappingTemplateFromString(
+        ownershipSnippets["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      ),
+      MappingTemplate.s3MappingTemplateFromString(
+        ownershipSnippets["res"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+      ),
+      datasource
+    );
   };
 
   protectDeleteResolver = (
@@ -302,24 +301,24 @@ export class WorkspaceAuthorizerTransformerV2 extends TransformerPluginBase {
     const datasource = ctx.api.host.getDataSource(`${config.ownershipModel.modelName}Table`) as DataSourceProvider;
 
     const currentModelDatasource = ctx.api.host.getDataSource(`${def.name.value}Table`) as DataSourceProvider;
-    // resolver.addToSlot(
-    //   'auth',
-    //   MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["req"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`),
-    //   MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["res"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`),
-    //   currentModelDatasource,
-    // );
-    // resolver.addToSlot(
-    //   'auth',
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     ownershipSnippets["req"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
-    //   ),
-    //   MappingTemplate.s3MappingTemplateFromString(
-    //     ownershipSnippets["res"],
-    //     `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
-    //   ),
-    //   datasource
-    // );
+    resolver.addToSlot(
+      'auth',
+      MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["req"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`),
+      MappingTemplate.s3MappingTemplateFromString(getRequestTemplateSnippets["res"], `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`),
+      currentModelDatasource,
+    );
+    resolver.addToSlot(
+      'auth',
+      MappingTemplate.s3MappingTemplateFromString(
+        ownershipSnippets["req"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.req.vtl`,
+      ),
+      MappingTemplate.s3MappingTemplateFromString(
+        ownershipSnippets["res"],
+        `${typeName}.${fieldName}.{slotName}.{slotIndex}.res.vtl`,
+      ),
+      datasource
+    );
   };
 
 }
